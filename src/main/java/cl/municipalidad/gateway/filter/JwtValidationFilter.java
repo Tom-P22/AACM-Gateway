@@ -37,6 +37,12 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         String method = request.getMethod();
 
         //  Rutas públicas que se saltan la validación
+
+        if (path.startsWith("/api/v1/auth") || path.contains("/doc/") || path.contains("/v3/api-docs")) {
+        filterChain.doFilter(request, response);
+        return;
+        }
+
         if (path.startsWith("/api/v1/auth")) {
             filterChain.doFilter(request, response);
             return;
