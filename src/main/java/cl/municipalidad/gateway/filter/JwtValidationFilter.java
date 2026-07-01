@@ -36,11 +36,16 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         String method = request.getMethod();
 
+        System.out.println("[JWT FILTER] " + method + " " + path);
         //  Rutas públicas que se saltan la validación
 
-        if (path.startsWith("/api/v1/auth") || path.contains("/doc/") || path.contains("/v3/api-docs")) {
-        filterChain.doFilter(request, response);
-        return;
+        if (path.startsWith("/swagger-ui") 
+        || path.contains("v3/api-docs") 
+        || path.contains("/doc/")
+        || path.equals("/favicon.ico")) {
+            
+            filterChain.doFilter(request, response);
+            return;
         }
 
         if (path.startsWith("/api/v1/auth")) {
@@ -61,8 +66,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
         // Revisión de cabeceras
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-        if (authHeader == null) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             rebotarPeticion(response, "Falta cabecera Authorization", HttpStatus.UNAUTHORIZED);
             return;
         }
