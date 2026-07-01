@@ -5,7 +5,154 @@ spring:
   application:
     name: ms-gateway
 
+  cloud:
+    gateway:
+      mvc:
+        cors:
+          allowed-origins: "*"
+          allowed-methods: "*"
+          allowed-headers: "*"
+        routes:
+          # =======================================================
+          # 1. RUTAS EXPLÍCITAS PARA DOCUMENTACIÓN (ALTA PRIORIDAD)
+          # =======================================================
+          - id: MS-auth-docs
+            uri: lb://ms-auth
+            predicates:
+              - Path=/api/v1/auth/v3/api-docs
+
+          - id: MS-usuarios-docs
+            uri: lb://ms-usuarios
+            predicates:
+              - Path=/api/v1/usuarios/v3/api-docs
+
+          - id: MS-canchas-docs
+            uri: lb://ms-canchas
+            predicates:
+              - Path=/api/v1/canchas/v3/api-docs
+
+          - id: MS-reservas-docs
+            uri: lb://ms-reservas
+            predicates:
+              - Path=/api/v1/reservas/v3/api-docs
+
+          - id: MS-soporte-docs
+            uri: lb://ms-soporte
+            predicates:
+              - Path=/api/v1/soporte/v3/api-docs
+
+          - id: MS-reportes-docs
+            uri: lb://ms-reportes
+            predicates:
+              - Path=/api/v1/reportes/v3/api-docs
+
+          - id: MS-inventario-docs
+            uri: lb://ms-inventario
+            predicates:
+              - Path=/api/v1/inventario/v3/api-docs
+
+          - id: MS-pagos-docs
+            uri: lb://ms-pagos
+            predicates:
+              - Path=/api/v1/pagos/v3/api-docs
+
+          - id: MS-resenas-docs
+            uri: lb://ms-resenas
+            predicates:
+              - Path=/api/v1/resenas/v3/api-docs
+
+          - id: MS-restricciones-docs
+            uri: lb://ms-restricciones
+            predicates:
+              - Path=/api/v1/restricciones/v3/api-docs
+
+          # =======================================================
+          # 2. ENRUTAMIENTO PRINCIPAL DE ENDPOINTS DE NEGOCIO
+          # =======================================================
+          - id: MS-usuarios
+            uri: lb://ms-usuarios
+            predicates:
+              - Path=/api/v1/usuarios/**
+
+          - id: MS-auth
+            uri: lb://ms-auth
+            predicates:
+              - Path=/api/v1/auth/**
+
+          - id: MS-canchas
+            uri: lb://ms-canchas
+            predicates:
+              - Path=/api/v1/canchas/**
+
+          - id: MS-reservas
+            uri: lb://ms-reservas
+            predicates:
+              - Path=/api/v1/reservas/**
+
+          - id: MS-soporte
+            uri: lb://ms-soporte
+            predicates:
+              - Path=/api/v1/soporte/**
+
+          - id: MS-reportes
+            uri: lb://ms-reportes
+            predicates:
+              - Path=/api/v1/reportes/**
+
+          - id: MS-inventario
+            uri: lb://ms-inventario
+            predicates:
+              - Path=/api/v1/inventario/**
+
+          - id: MS-pagos
+            uri: lb://ms-pagos
+            predicates:
+              - Path=/api/v1/pagos/**
+
+          - id: MS-resenas
+            uri: lb://ms-resenas
+            predicates:
+              - Path=/api/v1/resenas/**
+
+          - id: MS-restricciones
+            uri: lb://ms-restricciones
+            predicates:
+              - Path=/api/v1/restricciones/**
+
 eureka:
   client:
+    register-with-eureka: true
+    fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://eureka-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+springdoc:
+  api-docs:
+    enabled: true
+  paths-to-match: /api-totalmente-inexistente/**
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    urls:
+      - name: "Módulo Autenticación"
+        url: /api/v1/auth/v3/api-docs
+      - name: "Módulo Usuarios"
+        url: /api/v1/usuarios/v3/api-docs
+      - name: "Módulo Canchas"
+        url: /api/v1/canchas/v3/api-docs
+      - name: "Módulo Reservas"
+        url: /api/v1/reservas/v3/api-docs
+      - name: "Módulo Soporte"
+        url: /api/v1/soporte/v3/api-docs
+      - name: "Módulo Reportes"
+        url: /api/v1/reportes/v3/api-docs
+      - name: "Módulo Inventario"
+        url: /api/v1/inventario/v3/api-docs
+      - name: "Módulo Pagos"
+        url: /api/v1/pagos/v3/api-docs
+      - name: "Módulo Reseñas"
+        url: /api/v1/resenas/v3/api-docs
+      - name: "Módulo Restricciones"
+        url: /api/v1/restricciones/v3/api-docs
